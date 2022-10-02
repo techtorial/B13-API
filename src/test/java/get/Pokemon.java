@@ -5,6 +5,7 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Test;
+import pojo.PokemonPojo;
 
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,22 @@ public class Pokemon {
              */
 
         }
+
+    }
+
+
+    @Test
+    public void pokemonPojoTest() {
+
+        Response response = RestAssured.given().accept("application/json")
+                .when().get("https://pokeapi.co/api/v2/pokemon")
+                .then().statusCode(200).extract().response();
+
+        PokemonPojo parsedResponse = response.as(PokemonPojo.class);
+
+        Assert.assertEquals(1154, parsedResponse.getCount());
+        Assert.assertEquals("https://pokeapi.co/api/v2/pokemon?offset=20&limit=20", parsedResponse.getNext());
+        Assert.assertEquals(20, parsedResponse.getResults().size());
 
     }
 
